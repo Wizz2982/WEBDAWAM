@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOMAIN EXPANSION: INFINITE VOID</title>
+
+    <!-- Fonts: Teko (Structure) & Jacquard 12 (Chaos) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&family=Jacquard+12&family=Koulen&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --red: #FF0000;
+            --black: #000000;
+            --white: #FFFFFF;
+            --gray: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Teko', sans-serif;
+            overflow-x: hidden;
+            width: 100vw;
+        }
+
+        /* --- BACKGROUND --- */
+        .bg-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -2;
+            opacity: 0.6;
+            filter: grayscale(100%) contrast(150%);
+        }
+
+        .bg-fixed img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 900;
+        }
+
+        /* --- MARQUEE (RUNNING TEXT) --- */
+        .marquee-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .marquee {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            display: flex;
+            padding: 1rem 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            transform: rotate(-5deg) scale(1.1);
+            border-top: 2px solid var(--red);
+            border-bottom: 2px solid var(--red);
+            mix-blend-mode: hard-light;
+        }
+
+        .marquee-content {
+            display: flex;
+            animation: scroll 20s linear infinite;
+        }
+
+        .marquee-item {
+            font-size: 8rem;
+            font-weight: 700;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--red);
+            padding-right: 4rem;
+            text-transform: uppercase;
+            font-family: 'Koulen', sans-serif;
+            letter-spacing: 5px;
+        }
+
+        /* Alternate Direction */
+        .marquee.bottom {
+            transform: rotate(5deg) scale(1.1);
+            background: var(--red);
+            border: none;
+        }
+
+        .marquee.bottom .marquee-item {
+            color: var(--black);
+            -webkit-text-stroke: 0;
+            animation-direction: reverse;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* --- MAIN LAYOUT --- */
+        main {
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        /* HERO TITLE */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+        }
+
+        .glitch-title {
+            font-size: 15vw;
+            line-height: 0.8;
+            font-weight: 600;
+            color: var(--white);
+            mix-blend-mode: difference;
+            position: relative;
+            font-family: 'Koulen', fantasy;
+            text-shadow: 10px 10px 0px var(--red);
+        }
+
+        .subtitle {
+            background: var(--red);
+            color: var(--black);
+            font-size: 2rem;
+            padding: 0.5rem 2rem;
+            transform: skewX(-20deg);
+            margin-top: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .subtitle span {
+            display: block;
+            transform: skewX(20deg);
+        }
+
+        /* CARDS */
+        .content-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 10vh;
+            padding-bottom: 20vh;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--black);
+            border: 2px solid var(--white);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100%;
+            height: 100%;
+            background: var(--red);
+            z-index: -1;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translate(-10px, -10px);
+        }
+
+        .card:hover::after {
+            transform: translate(20px, 20px);
+        }
+
+        .card h2 {
+            font-family: 'Koulen', sans-serif;
+            font-size: 4rem;
+            color: var(--white);
+            border-bottom: 4px solid var(--red);
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            font-size: 1.5rem;
+            line-height: 1.4;
+            color: #ddd;
+        }
+
+        /* GALLERY */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            height: 300px;
+            background: #2a2a2a;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray);
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            transition: all 0.4s ease;
+            filter: grayscale(100%);
+        }
+
+        .gallery-item:hover {
+            border-color: var(--red);
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .gallery-item:hover img {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(transparent, var(--black));
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-title {
+            font-family: 'Koulen', sans-serif;
+            color: var(--red);
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .gallery-desc {
+            font-size: 0.9rem;
+            color: var(--white);
+        }
+
+        /* --- CURSOR --- */
+        .tracker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--red);
+            transform: translate(-50%, -50%) rotate(45deg);
+            pointer-events: none;
+            z-index: 9999;
+            transition: width 0.2s, height 0.2s;
+        }
+
+        .tracker-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background: var(--red);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* --- AUDIO UI --- */
+        .sound-ui {
+            position: fixed;
+            bottom: 3rem;
+            right: 3rem;
+            background: var(--white);
+            color: var(--black);
+            padding: 1rem;
+            font-weight: 900;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            transform: rotate(-5deg);
+            border: 4px solid var(--red);
+            transition: transform 0.2s;
+        }
+
+        .sound-ui:hover {
+            transform: rotate(0deg) scale(1.1);
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        /* --- DECORATIVE KANJI --- */
+        .kanji-float {
+            position: fixed;
+            font-size: 20rem;
+            color: rgba(255, 0, 0, 0.1);
+            z-index: -1;
+            font-family: sans-serif;
+            font-weight: 900;
+            pointer-events: none;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .marquee-item {
+                font-size: 4rem;
+            }
+
+            .glitch-title {
+                font-size: 20vw;
+            }
+
+            .card h2 {
+                font-size: 3rem;
+            }
+
+            .sound-ui {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="noise"></div>
+    <div class="tracker"></div>
+    <div class="tracker-dot"></div>
+
+    <!-- BACKGROUND IMAGE -->
+    <div class="bg-fixed">
+        <img src="itadori_sukuna.jpg" alt="Background">
+    </div>
+
+    <!-- MARQUEE SYSTEM (RUNNING TEXT) -->
+    <div class="marquee-wrapper">
+        <!-- Top Marquee -->
+        <div class="marquee">
+            <div class="marquee-content">
+                <span class="marquee-item">DOMAIN EXPANSION // M DAWAM SHIDDIQ // FRONTEND // </span>
+                <span class="marquee-item">DOMAIN EXPANSION // M DAWAM SHIDDIQ // FRONTEND // </span>
+                <span class="marquee-item">DOMAIN EXPANSION // M DAWAM SHIDDIQ // FRONTEND // </span>
+            </div>
+            <div class="marquee-content">
+                <span class="marquee-item">DOMAIN EXPANSION // M DAWAM SHIDDIQ // FRONTEND // </span>
+                <span class="marquee-item">DOMAIN EXPANSION // M DAWAM SHIDDIQ // FRONTEND // </span>
+                <span class="marquee-item">DOMAIN EXPANSION // M DAWAM SHIDDIQ // FRONTEND // </span>
+            </div>
+        </div>
+
+        <!-- Bottom Marquee (Reverse) -->
+        <div class="marquee bottom">
+            <div class="marquee-content">
+                <span class="marquee-item">SPECIAL GRADE // UI DESIGNER // CREATIVE // </span>
+                <span class="marquee-item">SPECIAL GRADE // UI DESIGNER // CREATIVE // </span>
+                <span class="marquee-item">SPECIAL GRADE // UI DESIGNER // CREATIVE // </span>
+            </div>
+            <div class="marquee-content">
+                <span class="marquee-item">SPECIAL GRADE // UI DESIGNER // CREATIVE // </span>
+                <span class="marquee-item">SPECIAL GRADE // UI DESIGNER // CREATIVE // </span>
+                <span class="marquee-item">SPECIAL GRADE // UI DESIGNER // CREATIVE // </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="kanji-float" style="top: 10%; right: -5%;">呪</div>
+    <div class="kanji-float" style="bottom: 10%; left: -5%;">術</div>
+
+    <main>
+        <div class="sound-ui" id="audioToggle">SOUND: OFF</div>
+        <audio id="bgMusic" loop src="theme.mp3"></audio>
+
+        <section class="hero-section">
+            <h1 class="glitch-title">M DAWAM<br>SHIDDIQ</h1>
+            <div class="subtitle"><span>WEB SORCERER</span></div>
+        </section>
+
+        <div class="content-section">
+            <div class="card">
+                <h2>01 // TEKNIK</h2>
+                <p>Menguasai seni HTML, CSS, dan JavaScript untuk menciptakan ilusi visual yang memukau pengguna.</p>
+            </div>
+
+            <div class="card" style="margin-left: auto; margin-right: 0;">
+                <h2>02 // VISUAL</h2>
+                <p>Mendesain antarmuka (UI) tingkat tinggi yang membekas di ingatan seperti kutukan.</p>
+            </div>
+
+            <!-- GALLERY SECTION -->
+            <div class="card" style="max-width: 1200px; background: transparent; border: none; padding: 0;">
+                <h2
+                    style="background: var(--black); padding: 0.5rem 1rem; border: 2px solid var(--white); border-bottom: 4px solid var(--red);">
+                    03 // ARSIP KUTUKAN</h2>
+
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="gallery_1.jpg" alt="Project 1">
+                        <div class="gallery-overlay">
+                            <div class="gallery-title">RYOIKI TENKAI</div>
+                            <div class="gallery-desc">Digital Interface Design</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="gallery_2.jpg" alt="Project 2">
+                        <div class="gallery-overlay">
+                            <div class="gallery-title">BLACK FLASH</div>
+                            <div class="gallery-desc">Motion Graphics</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="gallery_3.jpg" alt="Project 3">
+                        <div class="gallery-overlay">
+                            <div class="gallery-title">CURSED ENERGY</div>
+                            <div class="gallery-desc">Web Development</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <img src="gallery_4.jpg" alt="Gallery 4">
+                        <div class="gallery-overlay">
+                            <div class="gallery-title">ITADORI YUJI</div>
+                            <div class="gallery-desc">Besto Frendo</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="gallery_5.jpg" alt="Gallery 5">
+                        <div class="gallery-overlay">
+                            <div class="gallery-title">RYOIKI TENKAI</div>
+                            <div class="gallery-desc">Malevolent Shrine</div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="gallery_6.jpg" alt="Gallery 6">
+                        <div class="gallery-overlay">
+                            <div class="gallery-title">SPECIAL GRADE</div>
+                            <div class="gallery-desc">King of Curses</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>04 // KONTAK</h2>
+                <p>Hubungi saya jika Anda berani memasuki Domain saya.<br><br>EMAIL: MUHAMMADSHIDDIQ309@GMAIL.COM</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- CURSOR ---
+        const tracker = document.querySelector('.tracker');
+        const dot = document.querySelector('.tracker-dot');
+
+        window.addEventListener('mousemove', e => {
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+
+            tracker.animate({
+                left: e.clientX + 'px',
+                top: e.clientY + 'px'
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // --- AUDIO ---
+        const btn = document.getElementById('audioToggle');
+        const audio = document.getElementById('bgMusic');
+        let playing = false;
+
+        btn.addEventListener('click', () => {
+            if (playing) {
+                audio.pause();
+                btn.innerText = "SOUND: OFF";
+                btn.style.background = "white";
+                btn.style.color = "black";
+            } else {
+                audio.play();
+                btn.innerText = "SOUND: ON";
+                btn.style.background = "#FF0000";
+                btn.style.color = "white";
+            }
+            playing = !playing;
+        });
+
+        // Effect on click
+        window.addEventListener('mousedown', () => {
+            tracker.style.transform = "translate(-50%, -50%) rotate(45deg) scale(0.8)";
+            tracker.style.background = "rgba(255,0,0,0.5)";
+        });
+
+        window.addEventListener('mouseup', () => {
+            tracker.style.transform = "translate(-50%, -50%) rotate(45deg) scale(1)";
+            tracker.style.background = "transparent";
+        });
+    </script>
+</body>
+
+</html>
